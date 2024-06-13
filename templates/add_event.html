@@ -1,0 +1,9 @@
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    {% for fight_form in formset %}
+        {{ fight_form.as_table }}
+    {% endfor %}
+    <input type="submit" value="Create Event">
+</form>

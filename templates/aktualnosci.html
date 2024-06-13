@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1>Aktualności</h1>
+    {% for article in articles %}
+        <div>
+            <h2>{{article.title}}</h2>
+            <img src="{{article.image.url}}" alt="{{article.title}}">
+            <a href="{% url 'article_detail' article.id %}">Czytaj więcej</a>
+        </div>
+    {% endfor %}
+{% endblock %}

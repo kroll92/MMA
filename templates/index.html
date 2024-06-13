@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Strona Główna</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Witaj na naszej stronie!</h1>
+    </header>
+
+    <div style="float: right;">
+        <a href="/login" class="login-button">Login</a>
+        <a href="/register" class="register-button">Register</a>
+    </div>
+    
+    <nav>
+        <ul>
+            <li><a href="{% url 'aktualnosci' %}">Aktualności</a></li>
+            <li><a href="{% url 'events' %}">Eventy</a></li>
+            <li><a href="{% url 'skroty_walk' %}">Skróty Walk</a></li>
+            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
+            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="aktualnosci">
+            <!-- tu zawartość dla aktualności -->
+        </section>
+
+        <section id="eventy">
+            <!-- tu zawartość dla eventów -->
+        </section>
+
+        <section id="skroty_walk">
+            <!-- tu zawartość dla skrótów walk -->
+        </section>
+
+        <section id="zawodnicy">
+            <!-- tu zawartość dla zawodników -->
+        </section>
+
+        <section id="organizacje">
+            <!-- tu zawartość dla organizacji -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nasza Organizacja</p>
+    </footer>
+</body>
+
+</html>

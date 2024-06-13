@@ -1,0 +1,24 @@
+{% extends 'fighter.html' %}
+
+{% block content %}
+  <h1>Fighter: {{ fighter.name }}</h1>
+
+  <h2>Stats:</h2>
+  <ul>
+    <li>Win Streak: {{ fighter.fighterstats.win_streak }}</li>
+    <li>Knockout Wins: {{ fighter.fighterstats.knockout_wins }}</li>
+    <li>Submission Wins: {{ fighter.fighterstats.submission_wins }}</li>
+    <li>Significant Strikes Landed: {{ fighter.fighterstats.sig_strikes_landed }}</li>
+    <li>Significant Strikes Attempted: {{ fighter.fighterstats.sig_strikes_attempted }}</li>
+    <li>Takedowns Landed: {{ fighter.fighterstats.takedowns_landed }}</li>
+    <li>Takedowns Attempted: {{ fighter.fighterstats.takedowns_attempted }}</li>
+    <li>Significant Strikes Landed per Minute: {{ fighter.fighterstats.sig_strikes_landed_per_min }}</li>
+    <li>Significant Strikes Absorbed per Minute: {{ fighter.fighterstats.sig_strikes_absorbed_per_min }}</li>
+    <li>Average Takedowns per 15 Minutes: {{ fighter.fighterstats.takedown_avg_per_15_min }}</li>
+    <li>Average Submissions per 15 Minutes: {{ fighter.fighterstats.submission_avg_per_15_min }}</li>
+    <li>Significant Strike Defense (Percentage): {{ fighter.fighterstats.sig_strike_defense }}</li>
+    <li>Takedown Defense (Percentage): {{ fighter.fighterstats.takedown_defense }}</li>
+    <li>Average Knockdowns: {{ fighter.fighterstats.knockdown_avg }}</li>
+    <li>Average Fight Time: {{ fighter.fighterstats.avg_fight_time }}</li>
+  </ul>
+{% endblock %}
