@@ -72,4 +72,11 @@ class FighterStats(models.Model):
     def __str__(self):
         return self.fighter.name
 
+class FightHighlight(models.Model):
+    title = models.CharField(max_length=200)
+    youtube_url = models.URLField()
+
+    def __str__(self):
+        return self.title
+
 

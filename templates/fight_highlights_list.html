@@ -4,13 +4,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Lista Zawodników</title>
+    <title>Skróty Walk</title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 
 <body>
     <header>
-        <h1>Lista Zawodników</h1>
+        <h1>Skróty Walk</h1>
     </header>
 
     <nav>
@@ -24,10 +24,21 @@
     </nav>
 
     <main>
-        <section id="fighter_list">
+        <section id="skroty_walk">
+            <h2>Dodaj nowy skrót walki</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Dodaj</button>
+            </form>
+
+            <h2>Lista skrótów walk</h2>
             <ul>
-                {% for fighter in fighters %}
-                    <li><a href="{% url 'fighter-detail' fighter.id %}">{{ fighter.name }}</a></li>
+                {% for highlight in highlights %}
+                    <li>
+                        <h3>{{ highlight.title }}</h3>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ highlight.youtube_url|slice:'https://www.youtube.com/watch?v=' }}" frameborder="0" allowfullscreen></iframe>
+                    </li>
                 {% endfor %}
             </ul>
         </section>

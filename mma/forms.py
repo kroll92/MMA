@@ -1,5 +1,5 @@
 from django.forms import ModelForm, modelformset_factory
-from .models import Event, Fight, Fighter
+from .models import Event, Fight, Fighter, FightHighlight, Article
 
 
 class FightForm(ModelForm):
@@ -35,4 +35,15 @@ class FighterForm(forms.ModelForm):
     class Meta:
         model = Fighter
         fields = ['name']
+
+
+class FightHighlightForm(forms.ModelForm):
+    class Meta:
+        model = FightHighlight
+        fields = ['title', 'youtube_url']
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'image', 'content', 'published_date']
 

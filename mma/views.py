@@ -3,9 +3,11 @@ from .models import Article
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .models import Event, Fight, Fighter
-from .forms import EventForm, FightFormSet, FighterForm
+from .models import Event, Fight, Fighter, FightHighlight
+from .forms import EventForm, FightFormSet, FighterForm, FightHighlightForm, ArticleForm
 from django.views.generic import DetailView
+from django.urls import reverse
+from django.views import View
 
 def index(request):
     return render(request, 'index.html')
@@ -19,8 +21,6 @@ def events(request):
     return render(request, 'events.html')
 
 
-def skroty_walk(request):
-    return render(request, 'skroty_walk.html')
 
 
 def fighters(request):
@@ -30,6 +30,7 @@ def fighters(request):
 class FighterDetailView(DetailView):
     model = Fighter
     template_name = 'fighter_detail.html'
+    context_object_name = 'fighter'
 
 def organizacje(request):
     return render(request, 'organizacje.html')
@@ -67,12 +68,26 @@ def register_view(request):
 
 def aktualnosci(request):
     articles = Article.objects.all()
-    return render(request, 'aktualnosci.html', {'articles': articles})
+    return render(request, 'article_list.html', {'articles': articles})
 
 
 def article_detail(request, article_id):
     article = get_object_or_404(Article, pk=article_id)
     return render(request, 'article_detail.html', {'article': article})
+
+def add_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('aktualnosci')
+    else:
+        form = ArticleForm()
+    return render(request, 'add_article.html', {'form': form})
+
+def article_list(request):
+    articles = Article.objects.all()
+    return render(request, 'article_list.html', {'articles': articles})
 
 
 
@@ -116,3 +131,17 @@ def add_fighter(request):
     else:
         form = FighterForm()
     return render(request, 'add_fighter.html', {'form': form})
+
+class FightHighlightListView(View):
+    def get(self, request):
+        highlights = FightHighlight.objects.all()
+        form = FightHighlightForm()
+        return render(request, 'fight_highlights_list.html', {'highlights': highlights, 'form': form})
+
+    def post(self, request):
+        form = FightHighlightForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('fight_highlights_list'))
+        highlights = FightHighlight.objects.all()
+        return render(request, 'fight_highlights_list.html', {'highlights': highlights, 'form': form})
