@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Bet on Fight</title>
+</head>
+<body>
+    <h1>Bet on Fight</h1>
+    <p>Fight: {{ fight.fighter1.name }} vs {{ fight.fighter2.name }}</p>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="points">Points:</label>
+        <input type="number" id="points" name="points" required>
+        <button type="submit">Place Bet</button>
+    </form>
+</body>
+</html>

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django import forms
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Article(models.Model):
@@ -36,13 +37,18 @@ class Fight(models.Model):
     fighter1 = models.ForeignKey(Fighter, on_delete=models.CASCADE, related_name="fighter1")
     fighter2 = models.ForeignKey(Fighter, on_delete=models.CASCADE, related_name="fighter2")
 
+    def __str__(self):
+        return f" {self.fighter1} vs. {self.fighter2}"
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
     location = models.CharField(max_length=200)
-    fights = models.ManyToManyField(Fight)
+    fights = models.ManyToManyField(Fight, related_name='events')
+
+    def __str__(self):
+        return self.title
 
 class FighterStats(models.Model):
     fighter = models.OneToOneField(Fighter, on_delete=models.CASCADE)
@@ -80,3 +86,17 @@ class FightHighlight(models.Model):
         return self.title
 
 
+class Bet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fight = models.ForeignKey(Fight, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.fight.fighter1.name} vs {self.fight.fighter2.name}"
+
+class BetPoints(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - Points: {self.points}"

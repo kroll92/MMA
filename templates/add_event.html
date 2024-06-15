@@ -1,9 +1,18 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ formset.management_form }}
-    {% for fight_form in formset %}
-        {{ fight_form.as_table }}
-    {% endfor %}
-    <input type="submit" value="Create Event">
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodaj Wydarzenie</title>
+</head>
+<body>
+    <h1>Dodaj Wydarzenie</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        {{ formset.as_p }}
+        <button type="submit">Zapisz</button>
+    </form>
+</body>
+</html>

@@ -3,11 +3,13 @@ from .models import Article
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .models import Event, Fight, Fighter, FightHighlight
-from .forms import EventForm, FightFormSet, FighterForm, FightHighlightForm, ArticleForm
+from .models import Event, Fight, Fighter, FightHighlight, Fight, Bet, BetPoints
+from .forms import EventForm, FightFormSet, FighterForm, FightHighlightForm, ArticleForm, BetForm
 from django.views.generic import DetailView
 from django.urls import reverse
 from django.views import View
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
     return render(request, 'index.html')
@@ -91,6 +93,7 @@ def article_list(request):
 
 
 
+
 def add_event(request):
     if request.method == "POST":
         form = EventForm(request.POST)
@@ -101,11 +104,27 @@ def add_event(request):
             fights = formset.save(commit=False)
             for fight in fights:
                 fight.save()
-            return redirect('event_detail', pk=event.pk)
+                event.fights.add(fight)
+            return redirect('event_list')
     else:
         form = EventForm()
         formset = FightFormSet(queryset=Fight.objects.none())
     return render(request, 'add_event.html', {'form': form, 'formset': formset})
+
+def event_list(request):
+    events = Event.objects.prefetch_related('fights').all()
+    return render(request, 'event_list.html', {'events': events})
+
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'event_detail.html'
+    context_object_name = 'event'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = self.object
+        context['form'] = BetForm()
+        return context
 
 from django.shortcuts import render
 from .forms import FighterStatsForm
@@ -116,7 +135,7 @@ def create_fighter(request):
         form = FighterStatsForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('fighters')  # redirect to fighter's listing after successful creation
+            return redirect('fighters')
     else:
         form = FighterStatsForm()
 
@@ -145,3 +164,62 @@ class FightHighlightListView(View):
             return redirect(reverse('fight_highlights_list'))
         highlights = FightHighlight.objects.all()
         return render(request, 'fight_highlights_list.html', {'highlights': highlights, 'form': form})
+
+
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'event_detail.html'
+    context_object_name = 'event'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = self.get_object()
+        context['form'] = BetForm(event=event)
+        return context
+
+@login_required
+def bet_on_fight(request, fight_id):
+    fight = get_object_or_404(Fight, pk=fight_id)
+    user = request.user
+
+    if request.method == 'POST':
+        form = BetForm(request.POST)
+        if form.is_valid():
+            choice = form.cleaned_data['choice']
+            points = form.cleaned_data['points']
+            bet_points = BetPoints.objects.get_or_create(user=user)[0]
+
+            if points > bet_points.points:
+                error_message = "You don't have enough points."
+                return render(request, 'bet_on_fight.html', {'fight': fight, 'error_message': error_message})
+
+            if choice == 'fighter1_win':
+                points += 1
+            elif choice == 'fighter2_win':
+                points += 1
+
+
+            bet = Bet(user=user, fight=fight, points=points)
+            bet.save()
+
+            bet_points.points -= points
+            bet_points.save()
+
+            return redirect('event_detail', pk=fight.event.pk)
+
+    else:
+        form = BetForm()
+
+    return render(request, 'bet_on_fight.html', {'fight': fight, 'form': form})
+
+def bet_ranking(request):
+    ranking = BetPoints.objects.order_by('-points')
+    return render(request, 'bet_ranking.html', {'ranking': ranking})
+
+
+
+
+def event_detail(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    form = BetForm(instance=event)
+    return render(request, 'event_detail.html', {'event': event, 'form': form})

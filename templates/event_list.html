@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Wydarzeń</title>
+</head>
+<body>
+    <h1>Lista Wydarzeń</h1>
+    <ul>
+        {% for event in events %}
+            <li>
+                <a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a> - {{ event.date }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
