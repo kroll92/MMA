@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% block content %}
+    <section>
+        <h2>Potwierdź usunięcie artykułu: {{ object.title }}</h2>
+        <p>Czy na pewno chcesz usunąć ten artykuł?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Potwierdź usunięcie</button>
+            <a href="{% url 'article_detail' article_id=object.id %}">Anuluj</a>
+        </form>
+    </section>
+{% endblock %}

@@ -3,12 +3,13 @@ from .models import Article
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .models import Event, Fight, Fighter, FightHighlight, Fight, Bet, BetPoints
-from .forms import EventForm, FightFormSet, FighterForm, FightHighlightForm, ArticleForm, BetForm
-from django.views.generic import DetailView
-from django.urls import reverse
+from .models import Event, Fight, Fighter, FightHighlight, Fight, Bet, BetPoints, Article
+from .forms import EventForm, FightFormSet, FighterForm, FightHighlightForm, ArticleForm, BetForm, FighterSearchForm
+from django.views.generic import DetailView, DeleteView
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 def index(request):
@@ -37,7 +38,9 @@ class FighterDetailView(DetailView):
 def organizacje(request):
     return render(request, 'organizacje.html')
 
-
+def fighter_detail(request, fighter_id):
+    fighter = get_object_or_404(Fighter, pk=fighter_id)
+    return render(request, 'fighter_detail.html', {'fighter': fighter})
 
 
 def login_view(request):
@@ -49,22 +52,27 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('index')  # przekierowanie do głównej strony po zalogowaniu
+        else:
+            # Obsługa błędnych danych logowania
+            return render(request, 'login.html', {'error_message': 'Nieprawidłowe dane logowania'})
 
     return render(request, 'login.html')
-
 
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
-
+            return redirect('login')  # po zarejestrowaniu przekierowanie do logowania
     else:
         form = UserCreationForm()
 
     return render(request, 'register.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 
 
@@ -223,3 +231,36 @@ def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     form = BetForm(instance=event)
     return render(request, 'event_detail.html', {'event': event, 'form': form})
+
+from .models import Article
+from .forms import ArticleForm
+
+@login_required
+def edit_article(request, article_id):
+    article = get_object_or_404(Article, pk=article_id)
+
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('article_detail', article_id=article.id)
+    else:
+        form = ArticleForm(instance=article)
+
+    return render(request, 'edit_article.html', {'form': form, 'article': article})
+
+class ArticleDeleteView(DeleteView):
+    model = Article
+    success_url = reverse_lazy('article_list')  # Przekierowanie na listę artykułów po usunięciu
+    template_name = 'article_confirm_delete.html'
+
+
+def search_fighters(request):
+    form = FighterSearchForm(request.GET)
+    fighters = []
+
+    if form.is_valid():
+        search_query = form.cleaned_data['search_query']
+        fighters = Fighter.objects.filter(name__icontains=search_query)
+
+    return render(request, 'search_fighters.html', {'form': form, 'fighters': fighters})

@@ -63,3 +63,6 @@ class BetForm(forms.ModelForm):
             fights = event.fights.all()
             choices = [(fight.id, f"{fight.fighter1.name} vs {fight.fighter2.name}") for fight in fights]
             self.fields['fight'].choices = choices
+
+class FighterSearchForm(forms.Form):
+    search_query = forms.CharField(label='Wyszukaj zawodnika', max_length=100)

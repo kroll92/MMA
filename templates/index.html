@@ -1,52 +1,46 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 
 <head>
     <meta charset="UTF-8">
-    <title>Strona Główna</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Nazwa Twojej Strony</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
 </head>
 
 <body>
     <header>
-        <h1>Witaj na naszej stronie!</h1>
+        <h1>Nazwa Twojej Strony</h1>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+            <li>
+                <form action="{% url 'user_logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Wyloguj</button>
+                </form>
+            </li>
+            <li>Witaj, {{ user.username }}</li>
+        {% else %}
+            <li><a href="{% url 'user_login' %}">Zaloguj</a></li>
+            <li><a href="{% url 'register' %}">Zarejestruj</a></li>
+        {% endif %}
+        </div>
     </header>
 
-    <div style="float: right;">
-        <a href="/login" class="login-button">Login</a>
-        <a href="/register" class="register-button">Register</a>
-    </div>
-    
     <nav>
         <ul>
-            <li><a href="{% url 'article_list' %}">Aktualności</a></li>
+            <li><a href="{% url 'aktualnosci' %}">Aktualności</a></li>
             <li><a href="{% url 'event_list' %}">Eventy</a></li>
             <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
             <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
             <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
+            <li><a href="{% url 'fighter_search' %}">Wyszukaj zawodnika</a></li>
         </ul>
     </nav>
 
     <main>
-        <section id="article_list">
-            <!-- tu zawartość dla aktualności -->
-        </section>
-
-        <section id="eventy">
-            <!-- tu zawartość dla eventów -->
-        </section>
-
-        <section id="skroty_walk">
-            <!-- tu zawartość dla skrótów walk -->
-        </section>
-
-        <section id="zawodnicy">
-            <!-- tu zawartość dla zawodników -->
-        </section>
-
-        <section id="organizacje">
-            <!-- tu zawartość dla organizacji -->
-        </section>
+        {% block content %}
+        {% endblock %}
     </main>
 
     <footer>

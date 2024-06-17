@@ -1,44 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-
-<head>
-    <meta charset="UTF-8">
-    <title>{{ article.title }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-</head>
-
-<body>
-    <header>
-        <h1>{{ article.title }}</h1>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="{% url 'article_list' %}">Aktualności</a></li>
-            <li><a href="{% url 'event_list' %}">Eventy</a></li>
-            <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
-            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="article_detail">
-            <article>
-                <h2>{{ article.title }}</h2>
-                <p>{{ article.content }}</p>
-                <p><strong>Data publikacji:</strong> {{ article.published_date }}</p>
-                {% if article.image %}
-                    <img src="{{ article.image.url }}" alt="Image">
-                {% endif %}
-            </article>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
-    </footer>
-</body>
-
-</html>
+{% extends 'index.html' %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block header %}{{ article.title }}{% endblock %}
+{% block content %}
+    <section id="article_detail">
+        <article>
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.content }}</p>
+            <p><strong>Data publikacji:</strong> {{ article.published_date }}</p>
+            {% if article.image %}
+                <img src="{{ article.image.url }}" alt="Image">
+            {% endif %}
+        </article>
+    </section>
+    <a href="{% url 'edit_article' article_id=article.id %}">Edytuj artykuł</a>
+    <a href="{% url 'delete_article' pk=article.id %}">Usuń artykuł</a>
+{% endblock %}
