@@ -1,20 +1,18 @@
-
+{% extends 'index.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista Wydarzeń</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
-<body>
-    <h1>Lista Wydarzeń</h1>
+
+{% block title %}Eventy{% endblock %}
+
+{% block header %}Lista Eventów{% endblock %}
+
+{% block content %}
     <ul>
         {% for event in events %}
             <li>
-                <a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a> - {{ event.date }}
+                <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
             </li>
+        {% empty %}
+            <li>Brak dostępnych eventów.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}

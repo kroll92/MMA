@@ -1,52 +1,26 @@
+{% extends 'index.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="pl">
+{% block title %}Wyszukiwanie zawodników{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Wyszukiwanie zawodników</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
+{% block header %}Wyszukiwanie zawodników{% endblock %}
 
-<body>
-    <header>
-        <h1>Wyszukiwanie zawodników</h1>
-    </header>
+{% block content %}
+<section id="fighter_search">
+    <h2>Wyszukiwanie zawodników</h2>
+    <form method="GET">
+        {{ form.as_p }}
+        <button type="submit">Szukaj</button>
+    </form>
 
-    <nav>
-        <ul>
-            <li><a href="{% url 'aktualnosci' %}">Aktualności</a></li>
-            <li><a href="{% url 'event_list' %}">Eventy</a></li>
-            <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
-            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="fighter_search">
-            <h2>Wyszukiwanie zawodników</h2>
-            <form method="GET">
-                {{ form.as_p }}
-                <button type="submit">Szukaj</button>
-            </form>
-
-            {% if fighters %}
-            <ul>
-                {% for fighter in fighters %}
-                <li><a href="{% url 'fighter_detail' fighter.id %}">{{ fighter.name }}</a></li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>Brak wyników wyszukiwania dla zadanego zapytania.</p>
-            {% endif %}
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
-    </footer>
-</body>
-
-</html>
+    {% if fighters %}
+    <ul>
+        {% for fighter in fighters %}
+        <li><a href="{% url 'fighter_detail' fighter.id %}">{{ fighter.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Brak wyników wyszukiwania dla zadanego zapytania.</p>
+    {% endif %}
+</section>
+{% endblock %}

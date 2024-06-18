@@ -28,7 +28,7 @@ class Fighter(models.Model):
     name = models.CharField(max_length=100)
 
     def get_absolute_url(self):
-        return reverse('fighter-details', args=[str(self.id)])
+        return reverse('fighter_detail', args=[str(self.id)])
 
     def __str__(self):
         return self.name
@@ -51,7 +51,26 @@ class Event(models.Model):
         return self.title
 
 class FighterStats(models.Model):
+    WEIGHT_CLASSES = [
+        ('Musza', 'Musza – 56 kg'),
+        ('Kogucia', 'Kogucia – 61 kg'),
+        ('Piórkowa', 'Piórkowa – 65 kg'),
+        ('Lekka', 'Lekka – 70 kg'),
+        ('Półśrednia', 'Półśrednia – 77 kg'),
+        ('Średnia', 'Średnia – 84 kg'),
+        ('Półciężka', 'Półciężka – 93 kg'),
+        ('Ciężka', 'Ciężka – powyżej 93 kg'),
+    ]
+
+    ORGANIZATIONS = [
+        ('UFC', 'UFC'),
+        ('ONE FC', 'ONE FC'),
+        ('ACA', 'ACA'),
+    ]
+
     fighter = models.OneToOneField(Fighter, on_delete=models.CASCADE)
+    weight_class = models.CharField(max_length=20, choices=WEIGHT_CLASSES, default='Musza')
+    organization = models.CharField(max_length=50, choices=ORGANIZATIONS, default='UFC')
 
     win_streak = models.IntegerField()
     knockout_wins = models.IntegerField()
@@ -76,6 +95,9 @@ class FighterStats(models.Model):
     avg_fight_time = models.DurationField()
 
     def __str__(self):
+        return f"{self.fighter.name} {self.fighter.name}"
+
+    def __str__(self):
         return self.fighter.name
 
 class FightHighlight(models.Model):
@@ -84,19 +106,3 @@ class FightHighlight(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Bet(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    fight = models.ForeignKey(Fight, on_delete=models.CASCADE)
-    points = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.fight.fighter1.name} vs {self.fight.fighter2.name}"
-
-class BetPoints(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    points = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.user.username} - Points: {self.points}"

@@ -1,45 +1,19 @@
+<{% extends 'index.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
+{% block title %}Lista Artykułów{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Lista Artykułów</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
+{% block header %}Lista Artykułów{% endblock %}
 
-<body>
-    <header>
-        <h1>Lista Artykułów</h1>
-    </header>
-
-    <nav>
+{% block content %}
+    <section id="article_list">
         <ul>
-            <li><a href="{% url 'article_list' %}">Aktualności</a></li>
-            <li><a href="{% url 'event_list' %}">Eventy</a></li>
-            <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
-            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
+            {% for article in articles %}
+                <li>
+                    <h2><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></h2>
+                    <p>{{ article.content }}</p>
+                    <p><strong>Data publikacji:</strong> {{ article.published_date }}</p>
+                </li>
+            {% endfor %}
         </ul>
-    </nav>
-
-    <main>
-        <section id="article_list">
-            <ul>
-                {% for article in articles %}
-                    <li>
-                        <h2><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></h2>
-                        <p>{{ article.content }}</p>
-                        <p><strong>Data publikacji:</strong> {{ article.published_date }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
-    </footer>
-</body>
-
-</html>
+    </section>
+{% endblock %}

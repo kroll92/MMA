@@ -1,51 +1,26 @@
+{% extends 'index.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ fighter.name }} - Szczegóły Zawodnika</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
+{% block title %}{{ fighter.name }} - Szczegóły Zawodnika{% endblock %}
 
-<body>
-    <header>
-        <h1>{{ fighter.name }}</h1>
-    </header>
+{% block header %}{{ fighter.name }}{% endblock %}
 
-    <nav>
-        <ul>
-            <li><a href="{% url 'aktualnosci' %}">Aktualności</a></li>
-            <li><a href="{% url 'event_list' %}">Eventy</a></li>
-            <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
-            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="fighter_detail">
-            <h2>Szczegóły zawodnika</h2>
-            <ul>
-                <li><strong>Imię i nazwisko:</strong> {{ object.name }}</li>
-                <li><strong>Wygrane walki z rzędu:</strong> {{ object.fighterstats.win_streak }}</li>
-                <li><strong>Zwycięstwa przez nokaut:</strong> {{ object.fighterstats.knockout_wins }}</li>
-                <li><strong>Zwycięstwa przez poddanie:</strong> {{ object.fighterstats.submission_wins }}</li>
-                <li><strong>Obalenia na minutę:</strong> {{ object.fighterstats.takedown_avg_per_15_min }}</li>
-                <li><strong>Strzały celne na minutę:</strong> {{ object.fighterstats.sig_strikes_landed_per_min }}</li>
-                <li><strong>Strzały absorbowane na minutę:</strong> {{ object.fighterstats.sig_strikes_absorbed_per_min }}</li>
-                <li><strong>Próby obalenia na minutę:</strong> {{ object.fighterstats.takedown_avg_per_15_min }}</li>
-                <li><strong>Próby poddania na minutę:</strong> {{ object.fighterstats.submission_avg_per_15_min }}</li>
-                <li><strong>Skuteczność obrony przed strzałami:</strong> {{ object.fighterstats.sig_strike_defense }}%</li>
-                <li><strong>Skuteczność obrony przed obaleniami:</strong> {{ object.fighterstats.takedown_defense }}%</li>
-                <li><strong>Średni czas walki:</strong> {{ object.fighterstats.avg_fight_time }}</li>
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
-    </footer>
-</body>
-
-</html>
+{% block content %}
+<section id="fighter_detail">
+    <h2>Szczegóły zawodnika</h2>
+    <ul>
+        <li><strong>Imię i nazwisko:</strong> {{ object.name }}</li>
+        <li><strong>Wygrane walki z rzędu:</strong> {{ object.fighterstats.win_streak }}</li>
+        <li><strong>Zwycięstwa przez nokaut:</strong> {{ object.fighterstats.knockout_wins }}</li>
+        <li><strong>Zwycięstwa przez poddanie:</strong> {{ object.fighterstats.submission_wins }}</li>
+        <li><strong>Obalenia na minutę:</strong> {{ object.fighterstats.takedown_avg_per_15_min }}</li>
+        <li><strong>Strzały celne na minutę:</strong> {{ object.fighterstats.sig_strikes_landed_per_min }}</li>
+        <li><strong>Strzały absorbowane na minutę:</strong> {{ object.fighterstats.sig_strikes_absorbed_per_min }}</li>
+        <li><strong>Próby obalenia na minutę:</strong> {{ object.fighterstats.takedown_avg_per_15_min }}</li>
+        <li><strong>Próby poddania na minutę:</strong> {{ object.fighterstats.submission_avg_per_15_min }}</li>
+        <li><strong>Skuteczność obrony przed strzałami:</strong> {{ object.fighterstats.sig_strike_defense }}%</li>
+        <li><strong>Skuteczność obrony przed obaleniami:</strong> {{ object.fighterstats.takedown_defense }}%</li>
+        <li><strong>Średni czas walki:</strong> {{ object.fighterstats.avg_fight_time }}</li>
+    </ul>
+</section>
+{% endblock %}

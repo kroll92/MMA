@@ -1,52 +1,28 @@
+{% extends 'index.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
+{% block title %}Skróty Walk{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Skróty Walk</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
+{% block header %}Skróty Walk{% endblock %}
 
-<body>
-    <header>
-        <h1>Skróty Walk</h1>
-    </header>
+{% block content %}
+    <section id="skroty_walk">
+        <h2>Dodaj nowy skrót walki</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Dodaj</button>
+        </form>
 
-    <nav>
+        <h2>Lista skrótów walk</h2>
         <ul>
-            <li><a href="{% url 'aktualnosci' %}">Aktualności</a></li>
-            <li><a href="{% url 'event_list' %}">Eventy</a></li>
-            <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
-            <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
+            {% for highlight in highlights %}
+                <li>
+                    <h3>{{ highlight.title }}</h3>
+                    <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/{{ highlight.youtube_url|slice:'https://www.youtube.com/watch?v=' }}"
+                            frameborder="0" allowfullscreen></iframe>
+                </li>
+            {% endfor %}
         </ul>
-    </nav>
-
-    <main>
-        <section id="skroty_walk">
-            <h2>Dodaj nowy skrót walki</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Dodaj</button>
-            </form>
-
-            <h2>Lista skrótów walk</h2>
-            <ul>
-                {% for highlight in highlights %}
-                    <li>
-                        <h3>{{ highlight.title }}</h3>
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ highlight.youtube_url|slice:'https://www.youtube.com/watch?v=' }}" frameborder="0" allowfullscreen></iframe>
-                    </li>
-                {% endfor %}
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
-    </footer>
-</body>
-
-</html>
+    </section>
+{% endblock %}

@@ -1,7 +1,9 @@
-<h1>Add a Fighter</h1>
-
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Submit">
-</form>
+{% extends 'index.html' %}
+{% block content %}
+  <h2>Dodaj zawodnika</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Dodaj</button>
+  </form>
+{% endblock %}
