@@ -3,6 +3,28 @@ from datetime import timezone
 import pytest
 from django.test import Client
 
+@pytest.mark.django_db
+def test_index_view(client):
+    response = client.get(reverse('index'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_index_template(client):
+    response = client.get(reverse('index'))
+    assert 'index.html' in [template.name for template in response.templates]
+
+
+@pytest.mark.django_db
+def test_aktualnosci_template(client):
+    response = client.get(reverse('article_list'))
+    assert 'article_list.html' in [template.name for template in response.templates]
+
+@pytest.mark.django_db
+def test_aktualnosci_view(client):
+    response = client.get(reverse('aktualnosci'))
+    assert response.status_code == 200
+
 
 @pytest.fixture
 def create_fighters():
@@ -272,7 +294,7 @@ def test_event_detail_view_status_and_template(client):
 
 
 @pytest.mark.django_db
-def test_event_detail_view_contains_correct_event_data(client):
+def test_event_detail_view_correct_data(client):
     fighter1 = Fighter.objects.create(name='Fighter 1')
     fighter2 = Fighter.objects.create(name='Fighter 2')
     fight = Fight.objects.create(fighter1=fighter1, fighter2=fighter2)
@@ -404,3 +426,81 @@ def test_event_detail_view(client):
 
     expected_content = 'Sample Event'
     assert expected_content in response.content.decode('utf-8')
+
+@pytest.mark.django_db
+def test_event_detail_view_not_found(client):
+    url = reverse('event_detail', args=[9999])  # nieistniejące ID
+    response = client.get(url)
+    assert response.status_code == 404
+
+
+@pytest.fixture
+def article():
+    return mixer.blend('mma.Article')
+
+
+@pytest.mark.django_db
+def test_edit_article_view_form(client, article):
+    # Utwórz użytkownika i zaloguj go
+    user = User.objects.create_user(username='testuser', password='password')
+    client.login(username='testuser', password='password')
+
+    url = reverse('edit_article', args=[article.pk])
+    response = client.get(url)
+
+    # Sprawdź, czy uzyskano poprawny kod odpowiedzi
+    assert response.status_code == 200
+
+    # Sprawdź zawartość odpowiedzi
+    content = response.content.decode('utf-8')
+    assert '<form' in content
+    assert 'title' in content
+    assert 'content' in content
+
+
+@pytest.mark.django_db
+def test_edit_article_view_redirect(client, article):
+    url = reverse('edit_article', args=[article.pk])
+    response = client.get(url)
+
+    # Sprawdź, czy uzyskano przekierowanie do logowania
+    assert response.status_code == 302
+    assert '/accounts/login/' in response.url
+
+
+import pytest
+from django.urls import reverse
+from django.test import Client
+from mixer.backend.django import mixer
+from mma.models import Article
+@pytest.fixture
+def article():
+    return mixer.blend('mma.Article')
+
+@pytest.mark.django_db
+def test_delete_article_view(client, article):
+    url = reverse('delete_article', args=[article.pk])
+    response = client.get(url)
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_delete_article_redirect(client, article):
+    url = reverse('delete_article', args=[article.pk])
+    response = client.post(url)
+    assert response.status_code == 302
+    assert response.url == reverse('article_list')
+
+from mma.forms import FighterSearchForm
+
+@pytest.mark.django_db
+def test_search_fighters_form_in_context(client):
+    response = client.get(reverse('fighter_search') + '?search_query=John')
+    assert 'form' in response.context
+    assert isinstance(response.context['form'], FighterSearchForm)
+
+@pytest.mark.django_db
+def test_search_fighters_results(client):
+    fighter = mixer.blend(Fighter, name='John Doe')
+    response = client.get(reverse('fighter_search') + '?search_query=John')
+    assert fighter.name in str(response.content)
+

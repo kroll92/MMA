@@ -4,13 +4,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nazwa Twojej Strony</title>
+    <title>Łokieto</title>
     <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
 </head>
 
 <body>
     <header>
-        <h1>Nazwa Twojej Strony</h1>
+        <h1>Łokieto</h1>
         <div class="user-info">
             {% if user.is_authenticated %}
             <li>
@@ -33,7 +33,6 @@
             <li><a href="{% url 'event_list' %}">Eventy</a></li>
             <li><a href="{% url 'fight_highlights_list' %}">Skróty Walk</a></li>
             <li><a href="{% url 'fighters' %}">Zawodnicy</a></li>
-            <li><a href="{% url 'organizacje' %}">Organizacje</a></li>
             <li><a href="{% url 'fighter_search' %}">Wyszukaj zawodnika</a></li>
         </ul>
     </nav>
@@ -44,7 +43,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Nasza Organizacja</p>
+        <p>&copy; 2024 Łokieto.pl</p>
     </footer>
 </body>
 

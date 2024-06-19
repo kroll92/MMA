@@ -21,7 +21,8 @@ from django.urls import path
 from . import views
 from .views import FighterDetailView, FightHighlightListView, aktualnosci, add_article, article_list, fighters, add_event, event_list, event_detail, ArticleDeleteView, article_detail
 from django.contrib.auth import views as auth_views
-
+from django.conf.urls.static import static
+from django.conf import settings
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
@@ -33,7 +34,6 @@ urlpatterns = [
     path('add_event/', add_event, name='add_event'),
     path('events/', event_list, name='event_list'),
     path('events/<int:pk>/', event_detail, name='event_detail'),
-    path('organizacje/', views.organizacje, name='organizacje'),
     path('user_login/', views.login_view, name='user_login'),
     path('register/', views.register_view, name='register'),
     path('user_logout/', views.logout_view, name='user_logout'),
@@ -45,5 +45,6 @@ urlpatterns = [
     path('article/<int:article_id>/edit/', views.edit_article, name='edit_article'),
     path('fighters/search/', views.search_fighters, name='fighter_search'),
     path('fighters/<int:fighter_id>/', views.fighter_detail, name='fighter_detail'),
+    path('add_fighter/', views.add_fighter, name='add_fighter'),
 
 ]

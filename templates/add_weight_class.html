@@ -1,11 +1,10 @@
 {% extends "index.html" %}
 {% load static %}
 {% block content %}
-  <h1>Dodaj zawodnika</h1>
+  <h1>Dodaj kategorię wagową</h1>
   <form method="post">
     {% csrf_token %}
-    {{ fighter_form.as_p }}
-    {{ fighter_stats_form.as_p }}
+    {{ form.as_p }}
     <button type="submit">Dodaj</button>
   </form>
 {% endblock %}

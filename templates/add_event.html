@@ -1,19 +1,15 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Dodaj Wydarzenie</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-</head>
-<body>
-    <h1>Dodaj Wydarzenie</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ formset.management_form }}
-        {{ formset.as_p }}
-        <button type="submit">Zapisz</button>
-    </form>
-</body>
-</html>
+{% block title %}Dodaj Artykuł{% endblock %}
+
+{% block header %}Dodaj nowy artykuł{% endblock %}
+
+{% block content %}
+    <section id="add_article">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Dodaj artykuł</button>
+        </form>
+    </section>
+{% endblock %}

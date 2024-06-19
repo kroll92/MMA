@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+  <h1>Zawodnicy wg kategorii wagowej</h1>
+  {% for weight_class in weight_classes %}
+    <h2>{{ weight_class.name }} – {{ weight_class.weight_limit }} kg</h2>
+    <ul>
+      {% for fighter in weight_class.fighters.all %}
+        <li>{{ fighter.name }}</li>
+      {% empty %}
+        <li>Brak zawodników w tej kategorii wagowej</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endblock %}

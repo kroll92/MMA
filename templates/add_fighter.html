@@ -1,9 +1,13 @@
-{% extends 'index.html' %}
+{% extends "index.html" %}
+{% load static %}
+{% block title %}Dodaj Zawodnika{% endblock %}
+
 {% block content %}
-  <h2>Dodaj zawodnika</h2>
-  <form method="post">
+<h1>Dodaj Zawodnika</h1>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Dodaj</button>
-  </form>
+</form>
+<a href="{% url 'fighters' %}">Powrót do listy zawodników</a>
 {% endblock %}

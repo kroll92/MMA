@@ -20,10 +20,6 @@ def aktualnosci(request):
     return render(request, 'aktualnosci.html')
 
 
-def events(request):
-    return render(request, 'events.html')
-
-
 def fighters(request):
     all_fighters = Fighter.objects.all()
     return render(request, 'fighters.html', {'fighters': all_fighters})
@@ -33,10 +29,6 @@ class FighterDetailView(DetailView):
     model = Fighter
     template_name = 'fighter_detail.html'
     context_object_name = 'fighter'
-
-
-def organizacje(request):
-    return render(request, 'organizacje.html')
 
 
 def fighter_detail(request, fighter_id):
@@ -131,17 +123,6 @@ def event_list(request):
     return render(request, 'event_list.html', {'events': events})
 
 
-class EventDetailView(DetailView):
-    model = Event
-    template_name = 'event_detail.html'
-    context_object_name = 'event'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        event = self.object
-        return context
-
-
 from django.shortcuts import render
 from .forms import FighterStatsForm
 
@@ -156,6 +137,17 @@ def create_fighter(request):
         form = FighterStatsForm()
 
     return render(request, 'create_fighter.html', {'form': form})
+
+
+def add_fighter(request):
+    if request.method == 'POST':
+        form = FighterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('fighters')
+    else:
+        form = FighterForm()
+    return render(request, 'add_fighter.html', {'form': form})
 
 
 class FightHighlightListView(View):
